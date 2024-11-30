@@ -6,14 +6,12 @@ import (
 )
 
 func HexStrToBytes(str string) []byte {
-	data, err := hex.DecodeString(str)
-
+	bytes, err := hex.DecodeString(str)
 	if err != nil {
 		fmt.Println("Error decoding hex string:", err)
 		return nil
 	}
-
-	return data
+	return bytes
 }
 
 func BytesToHexStr(data []byte) string {
