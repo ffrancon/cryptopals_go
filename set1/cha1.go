@@ -2,18 +2,11 @@ package set1
 
 import (
 	"encoding/base64"
-	"encoding/hex"
-	"fmt"
+	"ffrancon/cryptopals-go/utils"
 )
 
-func HexStrToBase64(str string) []byte {
-	data, err := hex.DecodeString(str)
-
-	if err != nil {
-		fmt.Println("Error decoding hex string:", err)
-		return nil
-	}
-
+func Chal1(str string) []byte {
+	data := utils.HexStrToBytes(str)
 	dst := make([]byte, base64.StdEncoding.EncodedLen(len(data)))
 	base64.StdEncoding.Encode(dst, data)
 
