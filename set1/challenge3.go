@@ -6,17 +6,16 @@ import (
 )
 
 type message struct {
-	key       byte
-	decrypted []byte
+	Key       byte
+	Decrypted []byte
 	score     int
 }
 
-func Challenge3(str string) {
+func Challenge3(str string) (me message) {
 	bytes := utils.HexStrToBytes(str)
 	if bytes == nil {
-		return
+		return message{}
 	}
-	messages := make([]message, 256)
 	reg := regexp.MustCompile(`(?i)[ETAOIN SHRDLU]`)
 	for i := 0; i < 256; i++ {
 		copy := make([]byte, len(bytes))
@@ -25,6 +24,9 @@ func Challenge3(str string) {
 			copy[j] = bytes[j] ^ byte
 		}
 		score := len(reg.FindAll(copy, -1))
-		messages[byte] = message{byte, copy, score}
+		if score > me.score {
+			me = message{byte, copy, score}
+		}
 	}
+	return me
 }
