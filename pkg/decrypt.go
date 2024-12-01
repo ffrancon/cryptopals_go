@@ -18,7 +18,7 @@ func DecryptXorSingleByte(str string) (m Message) {
 		return Message{}
 	}
 	reg := regexp.MustCompile(`(?i)[ETAOIN SHRDLU]`)
-	for i := 0; i < 256; i++ {
+	for i := range 256 {
 		byte := byte(i)
 		xor := XorSingleByte(bytes, byte)
 		score := len(reg.FindAll(xor, -1))

@@ -12,10 +12,10 @@ func XorBytes(b1, b2 []byte) (bytes []byte) {
 	return bytes
 }
 
-func XorSingleByte(bytes []byte, key byte) []byte {
+func XorSingleByte(bytes []byte, by byte) []byte {
 	xor := make([]byte, len(bytes))
 	for i := range bytes {
-		xor[i] = bytes[i] ^ key
+		xor[i] = bytes[i] ^ by
 	}
 	return xor
 }
