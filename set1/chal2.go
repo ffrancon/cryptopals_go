@@ -5,15 +5,24 @@ import (
 	"fmt"
 )
 
-func Chal2(buf1, buf2 string) string {
+func handleStrToBytesConversion(buf1, buf2 string) ([]byte, []byte, error) {
 	bytes1 := utils.HexStrToBytes(buf1)
 	if bytes1 == nil {
 		fmt.Printf("invalid hex string: %s", buf1)
-		return ""
+		return nil, nil, fmt.Errorf("invalid hex string: %s", buf1)
 	}
 	bytes2 := utils.HexStrToBytes(buf2)
 	if bytes2 == nil {
 		fmt.Printf("invalid hex string: %s", buf2)
+		return nil, nil, fmt.Errorf("invalid hex string: %s", buf2)
+	}
+	return bytes1, bytes2, nil
+}
+
+func Chal2(buf1, buf2 string) string {
+	bytes1, bytes2, err := handleStrToBytesConversion(buf1, buf2)
+	if err != nil {
+		fmt.Println(err)
 		return ""
 	}
 	if len(bytes1) != len(bytes2) {
