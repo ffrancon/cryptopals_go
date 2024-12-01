@@ -11,7 +11,7 @@ type message struct {
 	score     int
 }
 
-func Challenge3(str string) (me message) {
+func Challenge3(str string) (m message) {
 	bytes := utils.HexStrToBytes(str)
 	if bytes == nil {
 		return message{}
@@ -24,9 +24,9 @@ func Challenge3(str string) (me message) {
 			copy[j] = bytes[j] ^ byte
 		}
 		score := len(reg.FindAll(copy, -1))
-		if score > me.score {
-			me = message{byte, copy, score}
+		if score > m.score {
+			m = message{byte, copy, score}
 		}
 	}
-	return me
+	return m
 }

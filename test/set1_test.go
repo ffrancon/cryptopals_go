@@ -23,3 +23,13 @@ func TestChallenge2(t *testing.T) {
 		t.Errorf("expected %s, got %s", exp, res)
 	}
 }
+
+func TestChallenge3(t *testing.T) {
+	str := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+	m := "Cooking MC's like a pound of bacon"
+	key := byte(88)
+	res := set1.Challenge3(str)
+	if string(res.Decrypted[:]) != m && res.Key != key {
+		t.Errorf("expected %s & %d, got %s & %d", m, key, res.Decrypted, res.Key)
+	}
+}
