@@ -18,6 +18,7 @@ func Chal2(buf1, buf2 string) string {
 	}
 	if len(bytes1) != len(bytes2) {
 		fmt.Println("buffers are not of the same length")
+		return ""
 	}
 
 	bytes3 := make([]byte, len(bytes1))
