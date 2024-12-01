@@ -17,7 +17,7 @@ func handleStrToBytesConversion(buf1, buf2 string) ([]byte, []byte, error) {
 	return bytes1, bytes2, nil
 }
 
-func Chal2(buf1, buf2 string) string {
+func Challenge2(buf1, buf2 string) (result string) {
 	bytes1, bytes2, err := handleStrToBytesConversion(buf1, buf2)
 	if err != nil {
 		fmt.Println(err)
@@ -32,5 +32,6 @@ func Chal2(buf1, buf2 string) string {
 	for i := range bytes3 {
 		bytes3[i] = bytes1[i] ^ bytes2[i]
 	}
-	return utils.BytesToHexStr(bytes3)
+	result = utils.BytesToHexStr(bytes3)
+	return result
 }
