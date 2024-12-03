@@ -2,13 +2,12 @@ package pkg
 
 import (
 	"fmt"
-	"regexp"
 )
 
 type Message struct {
 	Key       byte
 	Decrypted []byte
-	score     int
+	score     float64
 }
 
 func DecryptXorSingleByte(str string) (m Message) {
@@ -17,11 +16,10 @@ func DecryptXorSingleByte(str string) (m Message) {
 		fmt.Println(err)
 		return Message{}
 	}
-	reg := regexp.MustCompile(`(?i)[ETAOIN SHRDLU]`)
 	for i := range 256 {
 		byte := byte(i)
 		xor := XorSingleByte(bytes, byte)
-		score := len(reg.FindAll(xor, -1))
+		score := EvaluateEnglish(xor)
 		if score > m.score {
 			m = Message{byte, xor, score}
 		}
