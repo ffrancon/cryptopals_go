@@ -31,5 +31,11 @@ func EvaluateEnglish(bytes []byte) (score float64) {
 		occ := len(reg.FindAllIndex(bytes, -1))
 		score += float64(occ) * c.rate
 	}
+
+	// Unrecognized english characters impact score as well
+	unrecognizedReg := regexp.MustCompile(`[^A-Za-z0-9 .,?!:;']`)
+	occ := len(unrecognizedReg.FindAllIndex(bytes, -1))
+	score -= float64(occ) * 10
+
 	return score
 }
