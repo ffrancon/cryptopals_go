@@ -25,16 +25,25 @@ var characters = []character{
 	{"U", 2.8},
 }
 
-func EvaluateEnglish(bytes []byte) (score float64) {
+var nonEnglishCharRegexp = regexp.MustCompile(`[^A-Za-z0-9 .,?!:;']`)
+
+func computeRegexps() map[string]*regexp.Regexp {
+	regexps := make(map[string]*regexp.Regexp)
 	for _, c := range characters {
-		reg := regexp.MustCompile(`(?i)` + c.char)
-		occ := len(reg.FindAllIndex(bytes, -1))
+		regexps[c.char] = regexp.MustCompile(`(?i)` + c.char)
+	}
+	return regexps
+}
+
+// returns a score based on the frequency of english characters in the input bytes
+func EvaluateEnglish(bytes []byte) (score float64) {
+	regexps := computeRegexps()
+	for _, c := range characters {
+		occ := len(regexps[c.char].FindAllIndex(bytes, -1))
 		score += float64(occ) * c.rate
 	}
-
-	// Unrecognized english characters impact score as well
-	unrecognizedReg := regexp.MustCompile(`[^A-Za-z0-9 .,?!:;']`)
-	occ := len(unrecognizedReg.FindAllIndex(bytes, -1))
+	// non-english characters impact score as well
+	occ := len(nonEnglishCharRegexp.FindAllIndex(bytes, -1))
 	score -= float64(occ) * 10
 
 	return score
