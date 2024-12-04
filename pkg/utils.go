@@ -48,3 +48,11 @@ func EvaluateEnglish(bytes []byte) (score float64) {
 
 	return score
 }
+
+func ChunkBytes(bytes []byte, size int) [][]byte {
+	res := make([][]byte, len(bytes)/size)
+	for i := 0; i < len(bytes); i += size {
+		res[i/size] = bytes[i : i+size]
+	}
+	return res
+}
