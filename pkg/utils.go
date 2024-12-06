@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"math"
 	"regexp"
 )
 
@@ -10,22 +11,22 @@ type character struct {
 }
 
 var characters = []character{
-	{"E", 12.7},
-	{"T", 9.1},
-	{"A", 8.2},
-	{"O", 7.5},
-	{"I", 7.0},
-	{"N", 6.7},
-	{" ", 6.3},
-	{"S", 6.3},
-	{"H", 6.1},
-	{"R", 6.0},
-	{"D", 4.3},
-	{"L", 4.0},
-	{"U", 2.8},
+	{"E", 0.127},
+	{"T", 0.091},
+	{"A", 0.082},
+	{"O", 0.075},
+	{"I", 0.070},
+	{"N", 0.067},
+	{" ", 0.063},
+	{"S", 0.063},
+	{"H", 0.061},
+	{"R", 0.060},
+	{"D", 0.043},
+	{"L", 0.040},
+	{"U", 0.028},
 }
 
-var nonAsciiRegpex = regexp.MustCompile(`[^\x00-\x7F]`)
+var nonAsciiRegpex = regexp.MustCompile(`[^A-Za-z]`)
 
 func computeRegexps() map[string]*regexp.Regexp {
 	regexps := make(map[string]*regexp.Regexp)
@@ -40,13 +41,13 @@ func EvaluateEnglish(bytes []byte) (score float64) {
 	// if there are non-english characters, it's not english
 	nonAscii := len(nonAsciiRegpex.FindAllIndex(bytes, -1))
 	if nonAscii > 0 {
-		return 0
+		return 999
 	}
 
 	regexps := computeRegexps()
 	for _, c := range characters {
-		occ := len(regexps[c.char].FindAllIndex(bytes, -1))
-		score += float64(occ) * c.rate
+		rate := float64(len(regexps[c.char].FindAllIndex(bytes, -1))) / float64(len(bytes))
+		score += math.Pow(rate-c.rate, 2) / c.rate
 	}
 
 	return score
