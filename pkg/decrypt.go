@@ -24,5 +24,16 @@ func DecryptXorSingleByte(str string) (m Message) {
 			m = Message{byte, xor, score}
 		}
 	}
+	fmt.Printf("Key: %d, Decrypted: %s\n", m.Key, string(m.Decrypted))
+	return m
+}
+
+func DecryptXorSingleByteBatch(batch [][]byte) (m Message) {
+	for _, bytes := range batch {
+		mm := DecryptXorSingleByte(BytesToHexStr(bytes))
+		if mm.score > m.score {
+			m = mm
+		}
+	}
 	return m
 }

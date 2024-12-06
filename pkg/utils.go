@@ -25,7 +25,7 @@ var characters = []character{
 	{"U", 2.8},
 }
 
-var nonEnglishCharRegexp = regexp.MustCompile(`[^A-Za-z0-9 .,?!:;']`)
+var nonAsciiRegpex = regexp.MustCompile(`[^\x00-\x7F]`)
 
 func computeRegexps() map[string]*regexp.Regexp {
 	regexps := make(map[string]*regexp.Regexp)
@@ -37,14 +37,17 @@ func computeRegexps() map[string]*regexp.Regexp {
 
 // returns a score based on the frequency of english characters in the input bytes
 func EvaluateEnglish(bytes []byte) (score float64) {
+	// if there are non-english characters, it's not english
+	nonAscii := len(nonAsciiRegpex.FindAllIndex(bytes, -1))
+	if nonAscii > 0 {
+		return 0
+	}
+
 	regexps := computeRegexps()
 	for _, c := range characters {
 		occ := len(regexps[c.char].FindAllIndex(bytes, -1))
 		score += float64(occ) * c.rate
 	}
-	// non-english characters impact score as well
-	occ := len(nonEnglishCharRegexp.FindAllIndex(bytes, -1))
-	score -= float64(occ) * 10
 
 	return score
 }
@@ -52,6 +55,9 @@ func EvaluateEnglish(bytes []byte) (score float64) {
 func ChunkBytes(bytes []byte, size int) [][]byte {
 	res := make([][]byte, len(bytes)/size)
 	for i := 0; i < len(bytes); i += size {
+		if i+size > len(bytes) {
+			res = append(res, bytes[i:])
+		}
 		res[i/size] = bytes[i : i+size]
 	}
 	return res

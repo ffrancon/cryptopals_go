@@ -33,3 +33,10 @@ func TestChallenge3(t *testing.T) {
 		t.Errorf("expected %s & %d, got %s & %d", m, key, res.Decrypted, res.Key)
 	}
 }
+
+/* func TestChallenge4(t *testing.T) {
+	file := pkg.ReadFile("../data/14.txt")
+	batch := pkg.ChunkBytes(file, 60)
+	res := pkg.DecryptXorSingleByteBatch(batch)
+	fmt.Printf("Key: %d, Decrypted: %s\n", res.Key, string(res.Decrypted))
+} */

@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"bufio"
 	"os"
 )
 
@@ -19,8 +20,12 @@ func ReadFile(path string) []byte {
 	check(err)
 
 	bytes := make([]byte, fs.Size())
-	_, err = file.Read(bytes)
-	check(err)
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		bytes = append(bytes, scanner.Bytes()...)
+	}
+	check(scanner.Err())
 
 	return bytes
 }
