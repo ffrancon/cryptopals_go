@@ -38,3 +38,11 @@ func XorBuffers(buf1, buf2 string) string {
 	result := BytesToHexStr(bytes)
 	return result
 }
+
+func XorRepeatingKey(bytes, key []byte) []byte {
+	xor := make([]byte, len(bytes))
+	for i := range bytes {
+		xor[i] = bytes[i] ^ key[i%len(key)]
+	}
+	return xor
+}
