@@ -1,12 +1,17 @@
 package pkg
 
+import "fmt"
+
 func ComputeHammingDistance(bytes1, bytes2 []byte) (d int) {
-	for i, byte := range bytes1 {
-		xor := int(byte ^ bytes2[i])
-		for i := 1; i <= xor; i *= 2 {
-			if xor&i > 0 {
-				d++
-			}
+	if len(bytes1) != len(bytes2) {
+		fmt.Println("bytes arrays are not of the same length")
+		return 0
+	}
+	for i, b := range bytes1 {
+		xor := int(b ^ bytes2[i])
+		for xor > 0 {
+			d += xor & 1
+			xor >>= 1
 		}
 	}
 	return d
