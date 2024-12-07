@@ -59,7 +59,7 @@ func ScoringEnglish(bytes []byte) (score float64) {
 			charCount[b] = charCount[b] + 1
 		} else if b >= 97 && b <= 122 {
 			charCount[b-32] = charCount[b-32] + 1
-		} else if b == 32 || b == 33 || b == 34 || b == 39 || b == 44 || b == 46 || b == 58 || b == 59 || b == 63 {
+		} else if b >= 32 && b <= 63 {
 			charCount[b] = charCount[b] + 1
 		}
 	}
