@@ -53,23 +53,21 @@ func ScoringEnglish(bytes []byte) (score float64) {
 	}
 
 	// count the number of valid characters
-	validChars := make(map[byte]int)
-	total := 0
+	charCount := make(map[byte]int)
 	for _, b := range bytes {
-		total++
 		if b >= 65 && b <= 90 {
-			validChars[b] = validChars[b] + 1
+			charCount[b] = charCount[b] + 1
 		} else if b >= 97 && b <= 122 {
-			validChars[b-32] = validChars[b-32] + 1
+			charCount[b-32] = charCount[b-32] + 1
 		} else if b == 32 || b == 33 || b == 34 || b == 39 || b == 44 || b == 46 || b == 58 || b == 59 || b == 63 {
-			validChars[b] = validChars[b] + 1
+			charCount[b] = charCount[b] + 1
 		}
 	}
 
 	// Chi-square test
 	for b, r := range freqTable {
-		occ := float64(validChars[b])
-		expOcc := float64(total) * r
+		occ := float64(charCount[b])
+		expOcc := float64(len(bytes)) * r
 		score += math.Pow(occ-expOcc, 2) / expOcc
 	}
 
