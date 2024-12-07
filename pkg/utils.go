@@ -34,6 +34,8 @@ var freqTable = map[byte]float64{
 	'Z':  0.00074, // Z
 	' ':  0.13000, // Space
 	'!':  0.01000, // !
+	'?':  0.01000, // ?
+	'"':  0.01000, // "
 	'\'': 0.01000, // '
 	',':  0.01000, // ,
 	'.':  0.01000, // .
@@ -41,7 +43,7 @@ var freqTable = map[byte]float64{
 	';':  0.01000, // ;
 }
 
-var nonEnglishCharRegexp = regexp.MustCompile(`[^a-zA-Z\s.,:;'"!]`)
+var nonEnglishCharRegexp = regexp.MustCompile(`[^a-zA-Z0-9\s!?":;.,']`)
 
 // returns a score based on the frequency of english characters in the input bytes
 func ScoringEnglish(bytes []byte) (score float64) {
@@ -54,14 +56,12 @@ func ScoringEnglish(bytes []byte) (score float64) {
 	validChars := make(map[byte]int)
 	total := 0
 	for _, b := range bytes {
+		total++
 		if b >= 65 && b <= 90 {
-			total++
 			validChars[b] = validChars[b] + 1
 		} else if b >= 97 && b <= 122 {
-			total++
 			validChars[b-32] = validChars[b-32] + 1
-		} else if b == 32 || b == 33 || b == 39 || b == 44 || b == 46 || b == 58 || b == 59 {
-			total++
+		} else if b == 32 || b == 33 || b == 34 || b == 39 || b == 44 || b == 46 || b == 58 || b == 59 || b == 63 {
 			validChars[b] = validChars[b] + 1
 		}
 	}
