@@ -34,9 +34,9 @@ func TestChallenge3(t *testing.T) {
 	}
 }
 
-/* func TestChallenge4(t *testing.T) {
-	file := pkg.ReadFile("../data/14.txt")
-	batch := pkg.ChunkBytes(file, 60)
-	res := pkg.DecryptXorSingleByteBatch(batch)
-	fmt.Printf("Key: %d, Decrypted: %s\n", res.Key, string(res.Decrypted))
-} */
+func TestChallenge4(t *testing.T) {
+	res := pkg.DecryptXorSingleByteFromBatchFile("../data/4.txt")
+	if string(res.Decrypted[:]) != "Now that the party is jumping\n" && res.Key != byte(53) {
+		t.Errorf("expected %s & %d, got %s & %d", "Now that the party is jumping\n", byte(53), res.Decrypted, res.Key)
+	}
+}

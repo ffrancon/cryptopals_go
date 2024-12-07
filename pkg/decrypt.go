@@ -18,16 +18,18 @@ func DecryptXorSingleByte(str string) (m Message) {
 		fmt.Println(err)
 		return Message{}
 	}
-	m.Score = 9999
+	m.Score = 999
 	for i := range 256 {
 		byte := byte(i)
 		xor := XorSingleByte(bytes, byte)
-		score := EvaluateEnglish(xor)
+		score := ScoringEnglish(xor)
+		if score < 900 {
+			fmt.Printf("Key: %d, Decrypted: %s, Score: %f\n", byte, string(xor), score)
+		}
 		if score < m.Score {
 			m = Message{byte, xor, score}
 		}
 	}
-	fmt.Printf("Key: %d, Decrypted: %s, Score: %f\n", m.Key, string(m.Decrypted), m.Score)
 	return m
 }
 
@@ -41,10 +43,11 @@ func DecryptXorSingleByteFromBatchFile(path string) (m Message) {
 	check(err)
 	defer file.Close()
 
+	m.Score = 999
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		mm := DecryptXorSingleByte(BytesToHexStr(scanner.Bytes()))
-		if mm.Score > m.Score {
+		mm := DecryptXorSingleByte(scanner.Text())
+		if mm.Score < m.Score {
 			m = mm
 		}
 	}
