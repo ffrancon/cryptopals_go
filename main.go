@@ -6,8 +6,6 @@ import (
 )
 
 func main() {
-	file := pkg.ReadFile("./data/14.txt")
-	batch := pkg.ChunkBytes(file, 60)
-	res := pkg.DecryptXorSingleByteBatch(batch)
-	fmt.Printf("\nKey: %d, Decrypted: %s, Score: %f\n", res.Key, string(res.Decrypted), res.Score)
+	res := pkg.DecryptXorSingleByteFromBatchFile("./data/14.txt")
+	fmt.Printf("\nKey: %d, Decrypted: %s\n", res.Key, string(res.Decrypted))
 }
