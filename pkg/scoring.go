@@ -41,35 +41,29 @@ var freqTable = map[byte]float64{
 	'.':  0.01000, // .
 	':':  0.01000, // :
 	';':  0.01000, // ;
+	'\n': 0.01000, // \n
 }
 
 var nonEnglishCharRegexp = regexp.MustCompile(`[^a-zA-Z0-9\s!?":;.,']`)
 
-// returns a score based on the frequency of english characters in the input bytes
 func ScoringEnglish(bytes []byte) (score float64) {
-	// check for non-english characters, if found return a high score
 	if len(nonEnglishCharRegexp.FindAllIndex(bytes, -1)) > 0 {
 		return 999
 	}
-
-	// count the number of valid characters
 	charCount := make(map[byte]int)
 	for _, b := range bytes {
-		if b >= 65 && b <= 90 {
-			charCount[b] = charCount[b] + 1
-		} else if b >= 97 && b <= 122 {
+		// convert lowercase to uppercase
+		if b >= 97 && b <= 122 {
 			charCount[b-32] = charCount[b-32] + 1
-		} else if b >= 32 && b <= 63 {
+		} else {
 			charCount[b] = charCount[b] + 1
 		}
 	}
-
 	// Chi-square test
 	for b, r := range freqTable {
 		occ := float64(charCount[b])
 		expOcc := float64(len(bytes)) * r
 		score += math.Pow(occ-expOcc, 2) / expOcc
 	}
-
 	return score
 }
