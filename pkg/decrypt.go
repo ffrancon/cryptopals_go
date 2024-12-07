@@ -9,7 +9,7 @@ import (
 type Message struct {
 	Key       byte
 	Decrypted []byte
-	Score     float64
+	score     float64
 }
 
 func DecryptXorSingleByte(str string) (m Message) {
@@ -18,15 +18,15 @@ func DecryptXorSingleByte(str string) (m Message) {
 		fmt.Println(err)
 		return Message{}
 	}
-	m.Score = 999
+	m.score = 999
 	for i := range 256 {
 		byte := byte(i)
 		xor := XorSingleByte(bytes, byte)
 		score := ScoringEnglish(xor)
 		if score < 900 {
-			fmt.Printf("Key: %d, Decrypted: %s, Score: %f\n", byte, string(xor), score)
+			fmt.Printf("Key: %d, Decrypted: %s, score: %f\n", byte, string(xor), score)
 		}
-		if score < m.Score {
+		if score < m.score {
 			m = Message{byte, xor, score}
 		}
 	}
@@ -43,11 +43,11 @@ func DecryptXorSingleByteFromBatchFile(path string) (m Message) {
 	check(err)
 	defer file.Close()
 
-	m.Score = 999
+	m.score = 999
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		mm := DecryptXorSingleByte(scanner.Text())
-		if mm.Score < m.Score {
+		if mm.score < m.score {
 			m = mm
 		}
 	}
