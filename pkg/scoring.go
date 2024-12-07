@@ -44,7 +44,7 @@ var freqTable = map[byte]float64{
 	'\n': 0.01000, // \n
 }
 
-var nonEnglishCharRegexp = regexp.MustCompile(`[^a-zA-Z0-9\s!?":;.,']`)
+var nonEnglishCharRegexp = regexp.MustCompile(`[^a-zA-Z\s!?":;.,']`)
 
 func ScoringEnglish(bytes []byte) (score float64) {
 	if len(nonEnglishCharRegexp.FindAllIndex(bytes, -1)) > 0 {
