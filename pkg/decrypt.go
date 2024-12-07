@@ -23,9 +23,6 @@ func DecryptXorSingleByte(str string) (m Message) {
 		byte := byte(i)
 		xor := XorSingleByte(bytes, byte)
 		score := ScoringEnglish(xor)
-		if score < 900 {
-			fmt.Printf("Key: %d, Decrypted: %s, score: %f\n", byte, string(xor), score)
-		}
 		if score < m.score {
 			m = Message{byte, xor, score}
 		}
