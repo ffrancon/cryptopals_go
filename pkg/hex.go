@@ -27,3 +27,12 @@ func HexStrToBase64(str string) ([]byte, error) {
 	base64.StdEncoding.Encode(bytes, data)
 	return bytes, nil
 }
+
+func Base64ToHexStr(data []byte) string {
+	bytes := make([]byte, base64.StdEncoding.DecodedLen(len(data)))
+	n, err := base64.StdEncoding.Decode(bytes, data)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return BytesToHexStr(bytes[:n])
+}
