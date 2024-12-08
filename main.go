@@ -14,15 +14,7 @@ func check(e error) {
 func main() {
 	data, err := os.ReadFile("./data/6.txt")
 	check(err)
-	d := float64(-1)
-	k := 2
-	for i := 2; i < 41; i++ {
-		nd, _ := pkg.NormalizeKeySizeHammingDistance(data, i)
-		if d == -1 || nd < d {
-			d = nd
-			k = i
-		}
-	}
+	k := pkg.DetermineBestKeySize(data, 2, 40)
 	chunks := pkg.ChunkBytes(data, k)
 	fmt.Println(chunks)
 }
