@@ -48,7 +48,7 @@ var nonEnglishCharRegexp = regexp.MustCompile(`[^a-zA-Z\s!?":;.,']`)
 
 func ScoringEnglish(bytes []byte) (score float64) {
 	if len(nonEnglishCharRegexp.FindAllIndex(bytes, -1)) > 0 {
-		return 999
+		return -1
 	}
 	charCount := make(map[byte]int)
 	for _, b := range bytes {
@@ -66,4 +66,8 @@ func ScoringEnglish(bytes []byte) (score float64) {
 		score += math.Pow(occ-expOcc, 2) / expOcc
 	}
 	return score
+}
+
+func IsBetterScore(score, bestScore float64) bool {
+	return bestScore == -1 || (score >= 0 && score < bestScore)
 }
