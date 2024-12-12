@@ -8,21 +8,17 @@ import (
 type Message struct {
 	Key       byte
 	Decrypted []byte
-	score     float64
+	Score     float64
 }
 
 func DecryptXorSingleByte(bytes []byte) (m Message) {
-	/* bytes, err := HexStrToBytes(str)
-	if err != nil {
-		fmt.Println(err)
-		return Message{}
-	} */
-	m.score = -1
+	m.Score = -1
 	for i := range 256 {
 		byte := byte(i)
 		xor := XorSingleByte(bytes, byte)
 		score := ScoringEnglish(xor)
-		if IsBetterScore(score, m.score) {
+		/* fmt.Printf("dec: %s, key: %d, score: %f\n", string(xor), byte, score) */
+		if IsBetterScore(score, m.Score) {
 			m = Message{byte, xor, score}
 		}
 	}
@@ -39,14 +35,14 @@ func DecryptXorSingleByteFromBatchFile(path string) (m Message) {
 	check(err)
 	defer file.Close()
 
-	m.score = -1
+	m.Score = -1
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		str := scanner.Text()
 		bytes, err := HexStrToBytes(str)
 		check(err)
 		mm := DecryptXorSingleByte(bytes)
-		if IsBetterScore(mm.score, m.score) {
+		if IsBetterScore(mm.Score, m.Score) {
 			m = mm
 		}
 	}

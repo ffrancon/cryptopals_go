@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"errors"
+	"fmt"
 )
 
 func ComputeHammingDistance(bytes1, bytes2 []byte) (d int, e error) {
@@ -19,18 +20,37 @@ func ComputeHammingDistance(bytes1, bytes2 []byte) (d int, e error) {
 }
 
 func ComputeNormalizedHammingDistance(bytes []byte, s int) (float64, error) {
-	if len(bytes) < 3*s {
+	if len(bytes) < 4*s {
 		return -1, errors.New("byte array is too short")
 	}
+	fs := float64(s)
+
 	d1, _ := ComputeHammingDistance(bytes[:s], bytes[s:2*s])
+	n1 := float64(d1) / fs
+
 	d2, _ := ComputeHammingDistance(bytes[s:2*s], bytes[2*s:3*s])
-	avgDist := float64((d1 + d2) / 2)
-	return avgDist / float64(s), nil
+	n2 := float64(d2) / fs
+
+	d3, _ := ComputeHammingDistance(bytes[:s], bytes[2*s:3*s])
+	n3 := float64(d3) / fs
+
+	d4, _ := ComputeHammingDistance(bytes[2*s:3*s], bytes[3*s:4*s])
+	n4 := float64(d4) / fs
+
+	return (n1 + n2 + n3 + n4) / 4, nil
 }
 
+// [1, 2, 3, 4, 5, 6, 7, 8] -> [[1, 2], [3, 4], [5, 6], [7, 8]]
 func ChunkBytes(bytes []byte, s int) (chunks [][]byte) {
-	for i := 0; i < len(bytes); i += s {
-		chunks = append(chunks, bytes[i:i+s])
+	fmt.Printf("len(bytes): %d\n", len(bytes))
+	end := len(bytes)
+	for i := 0; i < end; i += s {
+		to := i + s
+		if to > end {
+			to = end
+		}
+		chunks = append(chunks, bytes[i:to])
+
 	}
 	return chunks
 }

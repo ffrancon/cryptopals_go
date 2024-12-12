@@ -25,10 +25,13 @@ func TestChallenge2(t *testing.T) {
 }
 
 func TestChallenge3(t *testing.T) {
-	str := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+	bytes, err := pkg.HexStrToBytes("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
+	if err != nil {
+		t.Errorf("error converting hex string to bytes: %s", err)
+	}
 	m := "Cooking MC's like a pound of bacon"
 	key := byte(88)
-	res := pkg.DecryptXorSingleByte(str)
+	res := pkg.DecryptXorSingleByte(bytes)
 	if string(res.Decrypted[:]) != m && res.Key != key {
 		t.Errorf("expected %s & %d, got %s & %d", m, key, res.Decrypted, res.Key)
 	}
