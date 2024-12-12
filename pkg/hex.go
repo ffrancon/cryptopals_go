@@ -36,3 +36,18 @@ func Base64ToHexStr(data []byte) string {
 	}
 	return BytesToHexStr(bytes[:n])
 }
+
+func Base64ToBytes(data []byte) ([]byte, error) {
+	bytes := make([]byte, base64.StdEncoding.DecodedLen(len(data)))
+	n, err := base64.StdEncoding.Decode(bytes, data)
+	if err != nil {
+		return nil, err
+	}
+	return bytes[:n], nil
+}
+
+func BytesToBase64(data []byte) string {
+	bytes := make([]byte, base64.StdEncoding.EncodedLen(len(data)))
+	base64.StdEncoding.Encode(bytes, data)
+	return string(bytes)
+}

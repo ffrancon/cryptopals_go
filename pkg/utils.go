@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"errors"
-	"fmt"
 )
 
 func ComputeHammingDistance(bytes1, bytes2 []byte) (d int, e error) {
@@ -42,7 +41,6 @@ func ComputeNormalizedHammingDistance(bytes []byte, s int) (float64, error) {
 
 // [1, 2, 3, 4, 5, 6, 7, 8] -> [[1, 2], [3, 4], [5, 6], [7, 8]]
 func ChunkBytes(bytes []byte, s int) (chunks [][]byte) {
-	fmt.Printf("len(bytes): %d\n", len(bytes))
 	end := len(bytes)
 	for i := 0; i < end; i += s {
 		to := i + s
@@ -53,6 +51,24 @@ func ChunkBytes(bytes []byte, s int) (chunks [][]byte) {
 
 	}
 	return chunks
+}
+
+// [[1, 2], [3, 4], [5, 6], [7]] -> [[1, 3, 5, 7], [2, 4, 6,]]
+func TransposeBytesChunks(chunks [][]byte) [][]byte {
+	chunksLength := len(chunks)
+	singleChunkLength := len(chunks[0])
+	transpose := make([][]byte, singleChunkLength)
+	// create a new array with the length of the first chunk
+	for x := 0; x < singleChunkLength; x++ {
+		transpose[x] = make([]byte, chunksLength)
+		// iterate over the chunks and add the byte to the new array
+		for y := 0; y < chunksLength; y++ {
+			if x < len(chunks[y]) {
+				transpose[x][y] = chunks[y][x]
+			}
+		}
+	}
+	return transpose
 }
 
 func DetermineBestKeySize(bytes []byte, min, max int) (s int) {
