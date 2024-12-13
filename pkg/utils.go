@@ -18,21 +18,19 @@ func ComputeHammingDistance(bytes1, bytes2 []byte) (d int, e error) {
 	return d, nil
 }
 
+// [1,2,3,4,5,6,7,8]
 func ComputeNormalizedHammingDistance(bytes []byte, s int) (float64, error) {
-	if len(bytes) < 8*s {
-		return -1, errors.New("byte array is too short")
+	raw := make([]float64, len(bytes)/s-1)
+	for i := 0; i < len(raw); i++ {
+		d, _ := ComputeHammingDistance(bytes[s*i:s*(i+1)], bytes[s*(i+1):s*(i+2)])
+		n := float64(d) / float64(s)
+		raw[i] = n
 	}
-	// compute the normalized hamming distance for the first 4 chunks
-	d1, _ := ComputeHammingDistance(bytes[:s], bytes[s:2*s])
-	n1 := float64(d1 / s)
-	d2, _ := ComputeHammingDistance(bytes[2*s:3*s], bytes[3*s:4*s])
-	n2 := float64(d2 / s)
-	d3, _ := ComputeHammingDistance(bytes[4*s:5*s], bytes[5*s:6*s])
-	n3 := float64(d3 / s)
-	d4, _ := ComputeHammingDistance(bytes[6*s:7*s], bytes[7*s:8*s])
-	n4 := float64(d4 / s)
-	// return the average of the normalized hamming distances
-	avg := (n1 + n2 + n3 + n4) / 4
+	total := 0.0
+	for _, r := range raw {
+		total += r
+	}
+	avg := total / float64(len(raw))
 	return avg, nil
 }
 
