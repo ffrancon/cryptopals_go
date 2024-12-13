@@ -32,13 +32,12 @@ func main() {
 
 	chunks := pkg.ChunkBytes(bytes, ks)
 	transposed := pkg.TransposeBytesChunks(chunks)
-	fmt.Println(len(transposed))
 	key := make([]byte, ks)
 
 	for x := range transposed {
-		m := pkg.DecryptXorSingleByte(transposed[x])
+		m := pkg.DecryptXorSingleByte(transposed[x], x)
 		// fmt.Printf("dec: %s, key: %d, score: %f\n\n", string(m.Decrypted), m.Key, m.Score)
 		key[x] = m.Key
 	}
-	// fmt.Printf("key: %v", key)
+	fmt.Printf("key: %v", key)
 }

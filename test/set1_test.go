@@ -31,7 +31,7 @@ func TestChallenge3(t *testing.T) {
 	}
 	m := "Cooking MC's like a pound of bacon"
 	key := byte(88)
-	res := pkg.DecryptXorSingleByte(bytes)
+	res := pkg.DecryptXorSingleByte(bytes, 0)
 	if string(res.Decrypted[:]) != m && res.Key != key {
 		t.Errorf("expected %s & %d, got %s & %d", m, key, res.Decrypted, res.Key)
 	}

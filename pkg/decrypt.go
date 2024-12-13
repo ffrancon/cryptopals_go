@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 )
 
@@ -11,13 +12,15 @@ type Message struct {
 	Score     float64
 }
 
-func DecryptXorSingleByte(bytes []byte) (m Message) {
+func DecryptXorSingleByte(bytes []byte, index int) (m Message) {
 	m.Score = -1
 	for i := range 256 {
 		byte := byte(i)
 		xor := XorSingleByte(bytes, byte)
 		score := ScoringEnglish(xor)
-		/* fmt.Printf("dec: %s, key: %d, score: %f\n", string(xor), byte, score) */
+		if index == 0 {
+			fmt.Printf("dec: %s, key: %d, score: %f\n", string(xor), byte, score)
+		}
 		if IsBetterScore(score, m.Score) {
 			m = Message{byte, xor, score}
 		}
@@ -41,7 +44,7 @@ func DecryptXorSingleByteFromBatchFile(path string) (m Message) {
 		str := scanner.Text()
 		bytes, err := HexStrToBytes(str)
 		check(err)
-		mm := DecryptXorSingleByte(bytes)
+		mm := DecryptXorSingleByte(bytes, 999)
 		if IsBetterScore(mm.Score, m.Score) {
 			m = mm
 		}
