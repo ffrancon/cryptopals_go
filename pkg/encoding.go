@@ -28,26 +28,14 @@ func HexStrToBase64(str string) ([]byte, error) {
 	return bytes, nil
 }
 
-func Base64ToHexStr(data []byte) string {
-	bytes := make([]byte, base64.StdEncoding.DecodedLen(len(data)))
-	n, err := base64.StdEncoding.Decode(bytes, data)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return BytesToHexStr(bytes[:n])
-}
-
-func Base64ToBytes(data []byte) ([]byte, error) {
-	bytes := make([]byte, base64.StdEncoding.DecodedLen(len(data)))
-	n, err := base64.StdEncoding.Decode(bytes, data)
-	if err != nil {
-		return nil, err
-	}
-	return bytes[:n], nil
-}
-
 func BytesToBase64(data []byte) string {
-	bytes := make([]byte, base64.StdEncoding.EncodedLen(len(data)))
-	base64.StdEncoding.Encode(bytes, data)
+	return base64.StdEncoding.EncodeToString(data)
+}
+
+func Base64ToString(data string) string {
+	bytes, err := base64.StdEncoding.DecodeString(data)
+	if err != nil {
+		return fmt.Sprintf("error decoding base64 string: %s", err)
+	}
 	return string(bytes)
 }

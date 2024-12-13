@@ -12,7 +12,7 @@ func check(e error) {
 		panic(e)
 	}
 }
-func scan(path string) (bytes []byte) {
+func scan(path string) (str string) {
 	file, err := os.Open(path)
 	check(err)
 	defer file.Close()
@@ -20,22 +20,20 @@ func scan(path string) (bytes []byte) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		check(err)
-		fmt.Println(scanner.Text(), pkg.BytesToBase64(scanner.Bytes()))
-		bytes = append(bytes, scanner.Bytes()...)
+		str += pkg.Base64ToString(scanner.Text())
 	}
 	check(scanner.Err())
-	return bytes
-}
-
-func main() {
-	scan("./data/6.txt")
+	return str
 }
 
 /* func main() {
+	scan("./data/6.txt")
+} */
+
+func main() {
 	// get data from file
-	data := scan("./data/6.txt")
-	bytes, err := pkg.Base64ToBytes(data)
-	check(err)
+	dec := scan("./data/6.txt")
+	bytes := []byte(dec)
 	// determine key size
 	ks := pkg.DetermineBestKeySize(bytes, 2, 80)
 	chunks := pkg.ChunkBytes(bytes, ks)
@@ -44,8 +42,8 @@ func main() {
 
 	for x := range transposed {
 		m := pkg.DecryptXorSingleByte(transposed[x])
-		fmt.Printf("hex: %s, dec: %s, key: %d, score: %f\n\n", pkg.BytesToHexStr(transposed[x]), string(m.Decrypted), m.Key, m.Score)
+		// fmt.Printf("dec: %s, key: %d, score: %f\n\n", string(m.Decrypted), m.Key, m.Score)
 		key[x] = m.Key
 	}
 	fmt.Printf("key: %v", key)
-} */
+}
