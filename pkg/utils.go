@@ -5,6 +5,12 @@ import (
 	"os"
 )
 
+func Check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
 func ComputeHammingDistance(bytes1, bytes2 []byte) (d int, e error) {
 	if len(bytes1) != len(bytes2) {
 		return -1, errors.New("byte arrays are not of the same length")
@@ -19,8 +25,7 @@ func ComputeHammingDistance(bytes1, bytes2 []byte) (d int, e error) {
 	return d, nil
 }
 
-// [1,2,3,4,5,6,7,8]
-func ComputeNormalizedHammingDistance(bytes []byte, s int) (float64, error) {
+func ComputeNormalizedHammingDistance(bytes []byte, s int) float64 {
 	raw := make([]float64, len(bytes)/s-1)
 	for i := 0; i < len(raw); i++ {
 		d, _ := ComputeHammingDistance(bytes[s*i:s*(i+1)], bytes[s*(i+1):s*(i+2)])
@@ -32,13 +37,13 @@ func ComputeNormalizedHammingDistance(bytes []byte, s int) (float64, error) {
 		total += r
 	}
 	avg := total / float64(len(raw))
-	return avg, nil
+	return avg
 }
 
 func DetermineBestKeySize(bytes []byte, min, max int) (s int) {
 	d := float64(-1)
 	for i := min; i < max; i++ {
-		nd, _ := ComputeNormalizedHammingDistance(bytes, i)
+		nd := ComputeNormalizedHammingDistance(bytes, i)
 		if d == -1 || nd < d {
 			d = nd
 			s = i
@@ -47,12 +52,10 @@ func DetermineBestKeySize(bytes []byte, min, max int) (s int) {
 	return s
 }
 
-func ReadFile(path string) (string, error) {
+func ReadFile(path string) string {
 	bytes, err := os.ReadFile(path)
-	if err != nil {
-		return "", err
-	}
-	return string(bytes), nil
+	Check(err)
+	return string(bytes)
 }
 
 // [1, 2, 3, 4, 5, 6, 7, 8] -> [[1, 2], [3, 4], [5, 6], [7, 8]]
@@ -64,7 +67,6 @@ func ChunkBytes(bytes []byte, s int) (chunks [][]byte) {
 			to = end
 		}
 		chunks = append(chunks, bytes[i:to])
-
 	}
 	return chunks
 }
@@ -73,16 +75,16 @@ func ChunkBytes(bytes []byte, s int) (chunks [][]byte) {
 func TransposeBytesChunks(chunks [][]byte) [][]byte {
 	chunksLength := len(chunks)
 	singleChunkLength := len(chunks[0])
-	transpose := make([][]byte, singleChunkLength)
+	transposed := make([][]byte, singleChunkLength)
 	// create a new array with the length of the first chunk
 	for x := 0; x < singleChunkLength; x++ {
-		transpose[x] = make([]byte, chunksLength)
+		transposed[x] = make([]byte, chunksLength)
 		// iterate over the chunks and add the byte to the new array
 		for y := 0; y < chunksLength; y++ {
 			if x < len(chunks[y]) {
-				transpose[x][y] = chunks[y][x]
+				transposed[x][y] = chunks[y][x]
 			}
 		}
 	}
-	return transpose
+	return transposed
 }

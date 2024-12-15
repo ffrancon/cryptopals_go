@@ -21,15 +21,8 @@ func XorSingleByte(bytes []byte, by byte) []byte {
 }
 
 func XorBuffers(buf1, buf2 string) string {
-	by1, e1 := HexStrToBytes(buf1)
-	if e1 != nil {
-		fmt.Println(e1)
-		return ""
-	}
-	by2, e2 := HexStrToBytes(buf2)
-	if e2 != nil {
-		fmt.Println(e2)
-	}
+	by1 := HexStrToBytes(buf1)
+	by2 := HexStrToBytes(buf2)
 	if len(by1) != len(by2) {
 		fmt.Println("buffers are not of the same length")
 		return ""

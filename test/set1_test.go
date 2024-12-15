@@ -8,7 +8,7 @@ import (
 func TestChallenge1(t *testing.T) {
 	hex := "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
 	exp := "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
-	res, _ := pkg.HexStrToBase64(hex)
+	res := pkg.HexStrToBase64(hex)
 	if string(res) != exp {
 		t.Errorf("expected %s, got %s", exp, res)
 	}
@@ -25,10 +25,7 @@ func TestChallenge2(t *testing.T) {
 }
 
 func TestChallenge3(t *testing.T) {
-	bytes, err := pkg.HexStrToBytes("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
-	if err != nil {
-		t.Errorf("error converting hex string to bytes: %s", err)
-	}
+	bytes := pkg.HexStrToBytes("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")
 	m := "Cooking MC's like a pound of bacon"
 	key := byte(88)
 	res := pkg.DecryptXorSingleByte(bytes, 0)
@@ -50,5 +47,29 @@ func TestChallenge5(t *testing.T) {
 	exp := "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"
 	if res != exp {
 		t.Errorf("expected %s, got %s", exp, res)
+	}
+}
+
+func TestChallenge6(t *testing.T) {
+	data := pkg.ReadFile("../data/6.txt")
+	bytes := pkg.Base64ToBytes(data)
+	ks := pkg.DetermineBestKeySize(bytes, 2, 40)
+	if ks != 29 {
+		t.Errorf("expected %d, got %d", 29, ks)
+	}
+	chunks := pkg.ChunkBytes(bytes, ks)
+	transposed := pkg.TransposeBytesChunks(chunks)
+	key := make([]byte, ks)
+	for x := range transposed {
+		m := pkg.DecryptXorSingleByte(transposed[x], x)
+		key[x] = m.Key
+	}
+	if string(key) != "Terminator X: Bring the noise" {
+		t.Errorf("expected %s, got %s", "Terminator X: Bring the noise", string(key))
+	}
+	res := pkg.XorRepeatingKey(bytes, key)
+	exp := pkg.ReadFile("../data/6-decrypted.txt")
+	if string(res) != exp {
+		t.Errorf("expected %s, got %s", exp, string(res))
 	}
 }

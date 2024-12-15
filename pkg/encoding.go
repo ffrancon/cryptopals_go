@@ -3,39 +3,31 @@ package pkg
 import (
 	"encoding/base64"
 	"encoding/hex"
-	"fmt"
 )
 
-func HexStrToBytes(str string) ([]byte, error) {
+func HexStrToBytes(str string) []byte {
 	bytes, err := hex.DecodeString(str)
-	if err != nil {
-		return nil, fmt.Errorf("error decoding hex string: %s", err)
-	}
-	return bytes, nil
+	Check(err)
+	return bytes
 }
 
 func BytesToHexStr(data []byte) string {
 	return hex.EncodeToString(data)
 }
 
-func HexStrToBase64(str string) ([]byte, error) {
-	data, err := HexStrToBytes(str)
-	if err != nil {
-		return nil, err
-	}
+func HexStrToBase64(str string) []byte {
+	data := HexStrToBytes(str)
 	bytes := make([]byte, base64.StdEncoding.EncodedLen(len(data)))
 	base64.StdEncoding.Encode(bytes, data)
-	return bytes, nil
+	return bytes
 }
 
 func BytesToBase64(data []byte) string {
 	return base64.StdEncoding.EncodeToString(data)
 }
 
-func Base64ToString(data string) string {
+func Base64ToBytes(data string) []byte {
 	bytes, err := base64.StdEncoding.DecodeString(data)
-	if err != nil {
-		return fmt.Sprintf("error decoding base64 string: %s", err)
-	}
-	return string(bytes)
+	Check(err)
+	return bytes
 }
