@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 )
 
@@ -18,9 +17,6 @@ func DecryptXorSingleByte(bytes []byte, index int) (m Message) {
 		byte := byte(i)
 		xor := XorSingleByte(bytes, byte)
 		score := ScoringEnglish(xor)
-		if index == 0 {
-			fmt.Printf("dec: %s, key: %d, score: %f\n", string(xor), byte, score)
-		}
 		if IsBetterScore(score, m.Score) {
 			m = Message{byte, xor, score}
 		}

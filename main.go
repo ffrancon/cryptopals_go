@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"ffrancon/cryptopals-go/pkg"
 	"fmt"
-	"os"
 )
 
 func check(e error) {
@@ -13,17 +12,9 @@ func check(e error) {
 	}
 }
 
-func readFile(path string) (string, error) {
-	bytes, err := os.ReadFile(path)
-	if err != nil {
-		return "", err
-	}
-	return string(bytes), nil
-}
-
 func main() {
 	// get data from file
-	data, err := readFile("./data/6.txt")
+	data, err := pkg.ReadFile("./data/6.txt")
 	check(err)
 	bytes, err := base64.StdEncoding.DecodeString(string(data))
 	check(err)
@@ -39,5 +30,6 @@ func main() {
 		// fmt.Printf("dec: %s, key: %d, score: %f\n\n", string(m.Decrypted), m.Key, m.Score)
 		key[x] = m.Key
 	}
-	fmt.Printf("key: %v", key)
+	decrypted := pkg.XorRepeatingKey(bytes, key)
+	fmt.Println(string(decrypted))
 }

@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"errors"
+	"os"
 )
 
 func ComputeHammingDistance(bytes1, bytes2 []byte) (d int, e error) {
@@ -44,6 +45,14 @@ func DetermineBestKeySize(bytes []byte, min, max int) (s int) {
 		}
 	}
 	return s
+}
+
+func ReadFile(path string) (string, error) {
+	bytes, err := os.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
 }
 
 // [1, 2, 3, 4, 5, 6, 7, 8] -> [[1, 2], [3, 4], [5, 6], [7, 8]]
