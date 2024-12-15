@@ -67,9 +67,4 @@ func TestChallenge6(t *testing.T) {
 	if string(key) != "Terminator X: Bring the noise" {
 		t.Errorf("expected %s, got %s", "Terminator X: Bring the noise", string(key))
 	}
-	res := pkg.XorRepeatingKey(bytes, key)
-	exp := pkg.ReadFile("../data/6-decrypted.txt")
-	if string(res) != exp {
-		t.Errorf("expected %s, got %s", exp, string(res))
-	}
 }

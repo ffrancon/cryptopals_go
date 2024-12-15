@@ -22,10 +22,6 @@ func HexStrToBase64(str string) []byte {
 	return bytes
 }
 
-func BytesToBase64(data []byte) string {
-	return base64.StdEncoding.EncodeToString(data)
-}
-
 func Base64ToBytes(data string) []byte {
 	bytes, err := base64.StdEncoding.DecodeString(data)
 	Check(err)
